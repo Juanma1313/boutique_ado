@@ -1,10 +1,50 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+![LandaSoft logo](ci_logo_small.png)
 
-Welcome,
+## How to Deploy the local development app
 
-This is the Code Institute student template for Codeanywhere. If you are using Gitpod then you need [this template](https://github.com/Code-Institute-Org/gitpod-full-template) instead.  We have preinstalled all of the tools you need to get started. It's perfectly ok to use this template as the basis for your project submissions.
+1. Install Django (version as stated in requirements.txt)
+2. Migrate and create superuser account
+3. Verify Django server works correctly
+4. Copy all project files from repository
+5. Update env.py with update keys and global information
+6. Install all requirements
+7. Migrate to create all needed tables 
+8. load the example data
+9. Change has_size in products table for sizable products and avoid exceptions
+    ```
+    $ python3 manage.py shell
+    In [1]: from products.models import Product
+    In [2]: kdbb = ['kitchen_dining', 'bed_bath']
+    In [3]: clothes= Product.objects.exclude(category__name__in=kdbb)
+    In [4]: clothes.count()
+    Out[5]: 130
+    In [6]: for item in clothes:
+        ...:     if item.sku in ('pp5003270936','pp5003960062','PP5005850180','PP5005940299','PP5007250126'):
+        ...:         item.has_sizes=False
+        ...:     else:
+        ...:         item.has_sizes=True
+        ...:     item.save()
+    In [7]: Product.objects.filter(has_sizes=True).count()
+    Out[8]: 125
+    In [9]: exit()
+    ```
+10. Run server
 
-You can safely delete this README.md file, or change it for your own project. Please do read it at least once, though! It contains some important information about Codeanywhere and the extensions we use. Some of this information has been updated since the video content was created. The last update to this file was: **August 30th, 2023**
+## How to generate a Django SECRET_KEY
+```
+# importing the function from utils
+from django.core.management.utils import get_random_secret_key
+
+# generating and printing the SECRET_KEY
+print(get_random_secret_key())
+```
+## How to load the example data
+
+The example data is located in /products/fixtures directory
+```
+$ python3 manage.py loaddata categorie
+$ python3 manage.py loaddata products
+```
 
 ## Codeanywhere Reminders
 
@@ -33,7 +73,3 @@ To log into the Heroku toolbelt CLI:
 5. Paste in your API key when asked
 
 You can now use the `heroku` CLI program - try running `heroku apps` to confirm it works. This API key is unique and private to you so do not share it. If you accidentally make it public then you can create a new one with _Regenerate API Key_.
-
----
-
-Happy coding!
